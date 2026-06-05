@@ -3,6 +3,9 @@
 @section('content')
 
 <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+     <div class="mb-6">
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Edit Task</h1>
+    </div>
 <!-- Filters bar -->
    <div class="flex flex-wrap items-center gap-3 mb-2">
         <form method="GET" class="flex flex-wrap gap-4 mb-8" action="{{ route('tasks.index') }}" id="filterForm">
