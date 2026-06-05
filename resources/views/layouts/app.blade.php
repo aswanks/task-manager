@@ -73,7 +73,7 @@
         </div>
     </nav>
 
-    @if(session('success'))
+     @if(session('success'))
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
         <div class="rounded-lg bg-green-50 border border-green-100 px-4 py-3 flex items-center justify-between">
             <p class="text-sm text-green-700">{{ session('success') }}</p>

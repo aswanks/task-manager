@@ -1,13 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
 
     <div class="flex flex-col lg:flex-row gap-6">
-
+        
         <!-- Main Content -->
         <div class="flex-1">
-
+           
             <div class="flex items-center justify-between mb-8">
                 <h1 class="text-5xl font-bold text-white">
                     Task List
@@ -22,7 +23,7 @@
             </div>
 
             <!-- Filters -->
-            <form method="GET" class="flex flex-wrap gap-4 mb-8">
+            <form method="GET" class="flex flex-wrap gap-4 mb-8" action="{{ route('tasks.index') }}" id="filterForm">
 
                 <div class="relative">
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -43,21 +44,21 @@
                         class="bg-white rounded-xl pl-12 pr-4 py-3 w-72 border border-gray-200 focus:ring-2 focus:ring-blue-500">
                 </div>
 
-                <select name="status" class="bg-white rounded-xl px-5 py-3">
+                <select name="status" class="bg-white rounded-xl px-5 py-3" onchange="document.getElementById('filterForm').submit()">
                     <option value="">Status</option>
                     <option value="pending">Pending</option>
                     <option value="in_progress">In Progress</option>
                     <option value="completed">Completed</option>
                 </select>
 
-                 <select name="status" class="bg-white rounded-xl px-5 py-3">
-                    <option value="">All</option>
-                    <option value="pending">Pending</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="completed">Completed</option>
+                 <select class="bg-white rounded-xl px-5 py-3" onchange="document.getElementById('filterForm').submit()">
+                    <option value="">All Medium</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
                 </select>
 
-                <select name="priority" class="bg-white rounded-xl px-5 py-3">
+                <select name="priority" class="bg-white rounded-xl px-5 py-3" onchange="document.getElementById('filterForm').submit()">
                     <option value="">Priority</option>
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -184,9 +185,14 @@
                     </div>
                     @endif
 
-                    <div class="px-4 py-2">
-                        Logout
-                    </div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                                class="w-full text-left px-4 py-3 rounded-xl bg-dark-100 text-gray-700
+                                    hover:bg-red-500 hover:text-white transition duration-200">
+                            Logout
+                        </button>
+                    </form>
 
                 </div>
                 <div class="p-6 border-t">

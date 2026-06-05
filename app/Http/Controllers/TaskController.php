@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Models\User;
 use App\Repositories\Contracts\TaskRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Services\TaskService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -16,6 +16,7 @@ class TaskController extends Controller
 
     public function __construct(
         private TaskRepositoryInterface $repo,
+        private UserRepositoryInterface $userRepo,
         private TaskService $service,
     ) {}
 
@@ -32,7 +33,7 @@ class TaskController extends Controller
     public function create()
     {
         $this->authorize('create', \App\Models\Task::class);
-        $users = User::orderBy('name')->get(['id', 'name']);
+        $users = $this->userRepo->allForDropdown();
         return view('tasks.create', compact('users'));
     }
 
@@ -47,15 +48,18 @@ class TaskController extends Controller
     {
         $task = $this->repo->find($id);
         $this->authorize('view', $task);
-        return view('tasks.show', compact('task'));
+        $users = $this->userRepo->allForDropdown();
+        $stats = $this->repo->dashboardStats();
+        return view('tasks.show', compact('task','users','stats'));
     }
 
     public function edit(int $id)
     {
         $task = $this->repo->find($id);
         $this->authorize('update', $task);
-        $users = User::orderBy('name')->get(['id', 'name']);
-        return view('tasks.edit', compact('task', 'users'));
+        $users = $this->userRepo->allForDropdown();
+        $stats = $this->repo->dashboardStats();
+        return view('tasks.edit', compact('task', 'users','stats'));
     }
 
     public function update(UpdateTaskRequest $request, int $id)
@@ -72,5 +76,11 @@ class TaskController extends Controller
         $this->authorize('delete', $task);
         $this->service->delete($id);
         return redirect()->route('tasks.index')->with('success', 'Task deleted.');
+    }
+
+    public function aiRefresh(int $task)
+    {
+        $task = $this->service->refreshAISummary($task);
+        return redirect()->route('tasks.show', $task)->with('success', 'AI summary refreshed.');
     }
 }

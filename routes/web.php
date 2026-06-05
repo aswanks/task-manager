@@ -24,4 +24,5 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 Route::middleware('auth')->group(function () {
     Route::get('/', fn() => redirect()->route('tasks.index'));
     Route::resource('tasks', TaskController::class);
+     Route::post('tasks/{task}/ai-refresh', [TaskController::class, 'aiRefresh'])->name('tasks.ai-refresh');
 });
